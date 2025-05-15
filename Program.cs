@@ -156,7 +156,7 @@ void ExploreCosmicPath(char[,] map, bool[,] visitedPosition, int row, int col, i
         return;
     }
 
-    
+
     visitedPosition[row, col] = true; // Mark this cell as visited
 
     // Explore all 4 directions (up/down/left/right)
@@ -200,7 +200,7 @@ visitedPosition = new bool[m, n];
 // step 2: create a function to visualize the shortest path
 void VisualizeShortestPath(char[,] map, int[,] pathMap, bool[,] visitedPosition, int row, int col, int stepCount)
 {
-    
+
     if (pathFound) // // Stops the program if the path is already found
         return;
 
@@ -208,14 +208,14 @@ void VisualizeShortestPath(char[,] map, int[,] pathMap, bool[,] visitedPosition,
         return;
 
     // Stop if the cell is an asteroid, already visited, or already part of a path
-    if (map[row, col] == 'X' || visitedPosition[row, col] || pathMap[row, col] > 0) 
+    if (map[row, col] == 'X' || visitedPosition[row, col] || pathMap[row, col] > 0)
         return;
 
-    
+
     if (stepCount > shortestPathLength) //Stop if stepCount exceeds shortest path length
         return;
 
-    
+
     if (map[row, col] == 'F' && stepCount == shortestPathLength) // update the map if the shortest path is found
     {
         pathMap[row, col] = stepCount; // Replace 'F' with the number at the finish position
@@ -223,7 +223,7 @@ void VisualizeShortestPath(char[,] map, int[,] pathMap, bool[,] visitedPosition,
         return;
     }
 
-   // Mark the cell as visited and store the step into the pathMap
+    // Mark the cell as visited and store the step into the pathMap
     visitedPosition[row, col] = true;
     pathMap[row, col] = stepCount;
 
@@ -294,21 +294,26 @@ for (int row = 0; row < m; row++)
     Console.WriteLine();
 }
 
-WriteShortestPathToCsv("ShortestPathReport.csv", map, pathMap, map.GetLength(0), map.GetLength(1));
-static void WriteShortestPathToCsv(string filePath, char[,] map, int[,] pathMap, int rows, int cols)
+ExportShortestPathToCsv("ShortestPathReport.csv", map, pathMap, map.GetLength(0), map.GetLength(1));
+static void ExportShortestPathToCsv(string filePath, char[,] map, int[,] pathMap, int rows, int cols)
 {
+    // Create the CSV file for writing
     using (StreamWriter writer = new StreamWriter(filePath))
     {
+        // Itarate through each row of the map
         for (int row = 0; row < rows; row++)
         {
-            string[] line = new string[cols];
+
+            string[] line = new string[cols]; // Prepare an array that will hold each cell CSV value for the current row
+            //Itarate through each column in the current row
             for (int col = 0; col < cols; col++)
             {
-                if (pathMap[row, col] > 0)
+                if (pathMap[row, col] > 0)// If the cell is part of the shortest path (step number > 0) write the step number
                     line[col] = pathMap[row, col].ToString();
-                else
+                else //  Otherwise, write the original map symbols
                     line[col] = map[row, col].ToString();
             }
+            // Join the row's cells with commas and write the line to the CSV file
             writer.WriteLine(string.Join(",", line));
         }
     }
