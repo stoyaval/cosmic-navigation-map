@@ -294,5 +294,23 @@ for (int row = 0; row < m; row++)
     Console.WriteLine();
 }
 
-
+WriteShortestPathToCsv("ShortestPathReport.csv", map, pathMap, map.GetLength(0), map.GetLength(1));
+static void WriteShortestPathToCsv(string filePath, char[,] map, int[,] pathMap, int rows, int cols)
+{
+    using (StreamWriter writer = new StreamWriter(filePath))
+    {
+        for (int row = 0; row < rows; row++)
+        {
+            string[] line = new string[cols];
+            for (int col = 0; col < cols; col++)
+            {
+                if (pathMap[row, col] > 0)
+                    line[col] = pathMap[row, col].ToString();
+                else
+                    line[col] = map[row, col].ToString();
+            }
+            writer.WriteLine(string.Join(",", line));
+        }
+    }
+}
 
